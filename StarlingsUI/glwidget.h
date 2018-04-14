@@ -36,16 +36,22 @@ public slots:
     void setXRotation(int angle);
     void setYRotation(int angle);
     void setZRotation(int angle);
+    void animate();
+    void addBoid();
 
 private:
     QOpenGLContext *context;
     QOpenGLFunctions *openGLfunctions;
 
     void draw();
+    void drawAxis();
 
     int xRot;
     int yRot;
     int zRot;
+
+    int elapsed;
+    int numBoids;
 
     QPoint lastPos;
 };
