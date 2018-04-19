@@ -8,12 +8,14 @@
 
 class Swarm{
 	std::vector<Boid> swarm;
+	Vector centre_of_mass;
 
 public:
 
 	Boid getBoid(int i);
 	void addBoid(Boid b);
 	int getSwarmSize();
+	Vector getCOM();
 
 };
 

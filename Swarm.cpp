@@ -13,4 +13,6 @@ int Swarm::getSwarmSize(){
 	return this->swarm.size(); 
 }
 
-
+Vector Swarm::getCOM(){
+	
+}
