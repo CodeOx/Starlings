@@ -14,15 +14,16 @@ private:
 	float e3; /*< third component of vector */
 
 public:
+	//! construcor
+	Vector();
+	//!Custom constructor for this class
+	Vector(float e1,float e2,float e3);
 	//! Accessor function to get the first component
 	float getFirst();
 	//! Accessor function to get the second component
 	float getSecond();
 	//! Accessor function to get the third component
 	float getThird();
-	//!Custom constructor for this class
-	Vector(float e1,float e2,float e3);
-	
 
 };
 

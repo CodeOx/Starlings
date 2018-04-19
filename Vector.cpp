@@ -1,6 +1,16 @@
 #include <iostream>
 #include "Vector.h"
 
+Vector::Vector(){
+	
+}
+
+Vector::Vector(float e1,float e2,float e3){
+	this->e1 = e1;
+	this->e2 = e2;
+	this->e3 = e3;
+}
+
 float Vector::getFirst(){
 	return this->e1;
 }
@@ -11,10 +21,4 @@ float Vector::getSecond(){
 
 float Vector::getThird(){
 	return this->e3;
-}
-
-Vector::Vector(float e1,float e2,float e3){
-	this->e1 = e1;
-	this->e2 = e2;
-	this->e3 = e3;
 }

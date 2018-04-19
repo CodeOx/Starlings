@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "Vector.h"
 
 #ifndef BOID_H
@@ -11,11 +12,11 @@ class Boid{
 private:
 	Vector location; /*< location is current position of boid */
 	Vector velocity; /*< velocity is current velocity of boid */
-	Vector accelaration; /*< accelaration is current accelaration of boid */
+	Vector acceleration; /*< accelaration is current accelaration of boid */
 
 public:
 	//! Custom constructors
-	Boid(Vector location,Vector velocity,Vector direction);
+	Boid(Vector location,Vector velocity,Vector accelaration);
 	Boid(Vector location,Vector velocity);
 	//! This function gives the force vector that boid experiences due to cohesion rule
 	Vector forceCohesion(std::vector<Boid> boidsList);
@@ -31,6 +32,9 @@ public:
 	void updateDirection();
 	//! function to update location
 	void updateLocation();
+
+	//! function to get location
+	Vector getLocation();
 
 };
 

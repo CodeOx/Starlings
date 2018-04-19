@@ -4,7 +4,8 @@ ODIR = obj
 
 OBJS = \
 	Swarm.o \
-	Vector.o
+	Vector.o \
+	Boid.o
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET)
 _OBJS = $(patsubst %,$(ODIR)/%,$(OBJS))
@@ -14,8 +15,6 @@ all :	$(LINK_TARGET)
 
 
 $(LINK_TARGET) :	$(_OBJS)
-#$(LINK_TARGET) : $(OBJS)
-#	$(CC)	-o	$@ main.cpp	$^
 
 $(ODIR)/%.o:%.cpp
 	$(CC)	-c	-o	$@	$<
