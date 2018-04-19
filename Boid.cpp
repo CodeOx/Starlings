@@ -1,11 +1,11 @@
 #include "Boid.h"
 
-#define LOCATION_FACTOR 10.0
+#define LOCATION_FACTOR 5.0
 #define VELOCITY_FACTOR 10.0
 
 Boid::Boid(){
-	Vector l(((rand() % 100) + 1)/LOCATION_FACTOR,((rand() % 100) + 1)/LOCATION_FACTOR,((rand() % 100) + 1)/LOCATION_FACTOR);
-	Vector v(((rand() % 100) + 1)/LOCATION_FACTOR,((rand() % 100) + 1)/LOCATION_FACTOR,((rand() % 100) + 1)/LOCATION_FACTOR);
+	Vector l(((rand() % 100) -50)/LOCATION_FACTOR,((rand() % 100) -50)/LOCATION_FACTOR,((rand() % 100) -50)/LOCATION_FACTOR);
+	Vector v(((rand() % 100) -50)/LOCATION_FACTOR,((rand() % 100) -50)/LOCATION_FACTOR,((rand() % 100) -50)/LOCATION_FACTOR);
 	Vector a(0.0,0.0,0.0);
 
 	this->location = l;

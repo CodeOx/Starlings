@@ -127,31 +127,36 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 void GLWidget::draw()
 {
 
-    for(int i = 0; i < numBoids; i++){
+    for(int i = 0; i < s.getSwarmSize(); i++){
+
+        Boid b = s.getBoid(i);
+        Vector b_location = b.getLocation();
 
         glPushMatrix();
         glColor3f(1.0, 0.0, 0.0);
-        std::cout<<i;
 
-        float newPosX = 15.0 * qCos(elapsed*6.28319/4000);
-        float newPosY = 10.0 * qSin(elapsed*6.28319/4000);
-        float newPosZ = 15.0 * qSin(elapsed*6.28319/4000);
+        //std::cout<<i;
 
-        float deltaX = newPosX - posX;
-        float deltaY = newPosY - posY;
-        float deltaZ = newPosZ - posZ;
+        //float newPosX = 15.0 * qCos(elapsed*6.28319/4000);
+        //float newPosY = 10.0 * qSin(elapsed*6.28319/4000);
+        //float newPosZ = 15.0 * qSin(elapsed*6.28319/4000);
 
-        float normalize = qSqrt((deltaX*deltaX) + (deltaY*deltaY) + (deltaZ*deltaZ));
+        //float deltaX = newPosX - posX;
+        //float deltaY = newPosY - posY;
+        //float deltaZ = newPosZ - posZ;
+
+        //float normalize = qSqrt((deltaX*deltaX) + (deltaY*deltaY) + (deltaZ*deltaZ));
 
         glScalef(0.08, 0.08, 0.08);
+
         //glRotatef(57.29 * qAcos(deltaX/normalize), 1.0, qAcos(deltaY/normalize), qAcos(deltaZ/normalize));
         //glRotatef(57.29 * (deltaX/normalize), 1.0, 0.0, 0.0);
-        glTranslatef(0.0, 4*i, 0.0);
-        glTranslatef(newPosX, newPosY, newPosZ);
 
-        posX = newPosX;
-        posY = newPosY;
-        posZ = newPosZ;
+        glTranslatef(b_location.getFirst(), b_location.getSecond(), b_location.getThird());
+
+        //posX = newPosX;
+        //posY = newPosY;
+        //posZ = newPosZ;
 
 
         glBegin(GL_QUADS);
@@ -225,7 +230,7 @@ void GLWidget::animate()
 
 void GLWidget::addBoid()
 {
-    numBoids++;
-    std::cout<<numBoids;
+    Boid b;
+    s.addBoid(b);
 }
 

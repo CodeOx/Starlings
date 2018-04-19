@@ -10,7 +10,7 @@ class Swarm{
 	std::vector<Boid> swarm;
 
 public:
-	//! Constructor
+	//! Constructor	
 	Swarm();
 	//! This function gives the force vector that boid experiences due to cohesion rule
 	Vector forceCohesion(Boid b);

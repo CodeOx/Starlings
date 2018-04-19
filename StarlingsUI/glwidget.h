@@ -10,6 +10,7 @@
 #include <QOpenGLBuffer>
 #include <QSurfaceFormat>
 #include <GL/glu.h>
+#include "../Swarm.h"
 
 class GLWidget : public QOpenGLWidget
 {
@@ -58,6 +59,8 @@ private:
     float posZ;
 
     QPoint lastPos;
+
+    Swarm s;
 };
 
 #endif // GLWIDGET_H
