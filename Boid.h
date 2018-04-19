@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 #include "Vector.h"
 
 #ifndef BOID_H
@@ -16,23 +17,15 @@ private:
 
 public:
 	//! Custom constructors
+	Boid();
 	Boid(Vector location,Vector velocity,Vector accelaration);
 	Boid(Vector location,Vector velocity);
-	//! This function gives the force vector that boid experiences due to cohesion rule
-	Vector forceCohesion(std::vector<Boid> boidsList);
-	//! This function gives the force vector that boid experiences due to separation rule
-	Vector forceSeparation(std::vector<Boid> boidsList);
-	//! This function gives the force vector that boid experiences due to alignment rule
-	Vector forceAlignment(std::vector<Boid> boidsList);
-	//! This function gives the force vector that boid experiences due to centeringrule
-	Vector forceCenter(std::vector<Boid> boidsList);
 	//! This function applies the force on boid
 	void applyForce(Vector force);
 	//! function to update direction
 	void updateDirection();
 	//! function to update location
 	void updateLocation();
-
 	//! function to get location
 	Vector getLocation();
 

@@ -8,14 +8,24 @@
 
 class Swarm{
 	std::vector<Boid> swarm;
-	Vector centre_of_mass;
 
 public:
+	//! Constructor
+	Swarm();
+	//! This function gives the force vector that boid experiences due to cohesion rule
+	Vector forceCohesion(Boid b);
+	//! This function gives the force vector that boid experiences due to separation rule
+	Vector forceSeparation(Boid b);
+	//! This function gives the force vector that boid experiences due to alignment rule
+	Vector forceAlignment(Boid b);
+	//! This function gives the force vector that boid experiences due to centeringrule
+	Vector forceCenter(Boid b);
+	//! This function gives the centre of mass of the swarm	
+	Vector getCOM();
 
 	Boid getBoid(int i);
 	void addBoid(Boid b);
 	int getSwarmSize();
-	Vector getCOM();
 
 };
 
