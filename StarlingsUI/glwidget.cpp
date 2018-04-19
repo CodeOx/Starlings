@@ -1,7 +1,7 @@
 #include "glwidget.h"
 #include <QtOpenGL>
 #include <qmath.h>
-
+#include <iostream>
 
 static void qNormalizeAngle(int &angle)
 {
@@ -126,17 +126,36 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void GLWidget::draw()
 {
-    glColor3f(1.0, 1.0, 1.0);
 
     for(int i = 0; i < numBoids; i++){
+
         glPushMatrix();
+        glColor3f(1.0, 0.0, 0.0);
+        std::cout<<i;
+
+        float newPosX = 15.0 * qCos(elapsed*6.28319/4000);
+        float newPosY = 10.0 * qSin(elapsed*6.28319/4000);
+        float newPosZ = 15.0 * qSin(elapsed*6.28319/4000);
+
+        float deltaX = newPosX - posX;
+        float deltaY = newPosY - posY;
+        float deltaZ = newPosZ - posZ;
+
+        float normalize = qSqrt((deltaX*deltaX) + (deltaY*deltaY) + (deltaZ*deltaZ));
 
         glScalef(0.08, 0.08, 0.08);
-        glTranslatef(0.0, 2*i, 0.0);
-        glTranslatef(15.0 * qCos(elapsed*6.28319/4000), 10.0 * qSin(elapsed*6.28319/4000), 15.0 * qSin(elapsed*6.28319/4000));
-        glRotatef(270.0, 1.0, 0.0, 0.0);
+        //glRotatef(57.29 * qAcos(deltaX/normalize), 1.0, qAcos(deltaY/normalize), qAcos(deltaZ/normalize));
+        //glRotatef(57.29 * (deltaX/normalize), 1.0, 0.0, 0.0);
+        glTranslatef(0.0, 4*i, 0.0);
+        glTranslatef(newPosX, newPosY, newPosZ);
+
+        posX = newPosX;
+        posY = newPosY;
+        posZ = newPosZ;
+
 
         glBegin(GL_QUADS);
+            glColor3f(1.0, 1.0, 1.0);
             glNormal3f(0,0,-1);
             glVertex3f(-1,-1,0);
             glVertex3f(-1,1,0);
@@ -145,24 +164,28 @@ void GLWidget::draw()
 
         glEnd();
         glBegin(GL_TRIANGLES);
+            glColor3f(0.5, 0.5, 0.5);
             glNormal3f(0,-1,0.707);
             glVertex3f(-1,-1,0);
             glVertex3f(1,-1,0);
             glVertex3f(0,0,1.2);
         glEnd();
         glBegin(GL_TRIANGLES);
+            glColor3f(0.5, 0.5, 0.5);
             glNormal3f(1,0, 0.707);
             glVertex3f(1,-1,0);
             glVertex3f(1,1,0);
             glVertex3f(0,0,1.2);
         glEnd();
         glBegin(GL_TRIANGLES);
+            glColor3f(0.5, 0.5, 0.5);
             glNormal3f(0,1,0.707);
             glVertex3f(1,1,0);
             glVertex3f(-1,1,0);
             glVertex3f(0,0,1.2);
         glEnd();
         glBegin(GL_TRIANGLES);
+            glColor3f(0.5, 0.5, 0.5);
             glNormal3f(-1,0,0.707);
             glVertex3f(-1,1,0);
             glVertex3f(-1,-1,0);
@@ -175,22 +198,20 @@ void GLWidget::draw()
 void GLWidget::drawAxis()
 {
     glPushMatrix();
+    glLineWidth(1.5);
     glBegin(GL_LINES);
-        glLineWidth(4.0);
         glColor3f(0.0, 1.0, 0.0);
-        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(-0.5, 0.0, 0.0);
         glVertex3f(0.5, 0.0, 0.0);
     glEnd();
     glBegin(GL_LINES);
-        glLineWidth(4.0);
         glColor3f(1.0, 0.0, 0.0);
-        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(0.0, -0.5, 0.0);
         glVertex3f(0.0, 0.5, 0.0);
     glEnd();
     glBegin(GL_LINES);
-        glLineWidth(4.0);
         glColor3f(0.0, 0.0, 1.0);
-        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(0.0, 0.0, -0.5);
         glVertex3f(0.0, 0.0, 0.5);
     glEnd();
     glPopMatrix();
@@ -205,5 +226,6 @@ void GLWidget::animate()
 void GLWidget::addBoid()
 {
     numBoids++;
+    std::cout<<numBoids;
 }
 

@@ -53,6 +53,10 @@ private:
     int elapsed;
     int numBoids;
 
+    float posX;
+    float posY;
+    float posZ;
+
     QPoint lastPos;
 };
 

@@ -22,6 +22,7 @@ public:
 	float getThird();
 	//!Custom constructor for this class
 	Vector(float e1,float e2,float e3);
+	
 
 };
 

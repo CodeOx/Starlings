@@ -6,8 +6,7 @@ Boid Swarm::getBoid(int i){
 }
 
 void Swarm::addBoid(Boid b){
-	int size = this->swarm.size();
-	this->swarm[size] = b;
+	this->swarm.push_back(b);
 }
 
 int Swarm::getSwarmSize(){
