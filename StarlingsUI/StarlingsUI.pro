@@ -24,18 +24,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-LIBS += "C:\Users\HP\Documents\iit_acad\cop290\StalingsPackage\Starlings\obj\Boid.o" \
-        "C:\Users\HP\Documents\iit_acad\cop290\StalingsPackage\Starlings\obj\Swarm.o" \
-        "C:\Users\HP\Documents\iit_acad\cop290\StalingsPackage\Starlings\obj\Vector.o"
+#LIBS += "C:\Users\HP\Documents\iit_acad\cop290\StalingsPackage\Starlings\obj\Boid.o" \
+#        "C:\Users\HP\Documents\iit_acad\cop290\StalingsPackage\Starlings\obj\Swarm.o" \
+#        "C:\Users\HP\Documents\iit_acad\cop290\StalingsPackage\Starlings\obj\Vector.o"
 
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
     glwidget.cpp \
+    ../Boid.cpp \
+    ../Swarm.cpp \
+    ../Vector.cpp
 
 HEADERS += \
         mainwindow.h \
-    glwidget.h
+    glwidget.h \
+    ../Boid.h \
+    ../Swarm.h \
+    ../Vector.h
 
 FORMS += \
         mainwindow.ui

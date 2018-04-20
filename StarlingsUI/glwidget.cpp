@@ -3,6 +3,8 @@
 #include <qmath.h>
 #include <iostream>
 
+#define timePerFrame 0.05
+
 static void qNormalizeAngle(int &angle)
 {
     while (angle < 0)
@@ -17,7 +19,6 @@ GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent)
     yRot = 0;
     zRot = 0;
     elapsed = 0;
-    numBoids = 1;
 }
 
 QSize GLWidget::minimumSizeHint() const
@@ -226,6 +227,7 @@ void GLWidget::animate()
 {
     elapsed = (elapsed + qobject_cast<QTimer*>(sender())->interval()) % 4000;
     update();
+    s.update(timePerFrame);
 }
 
 void GLWidget::addBoid()

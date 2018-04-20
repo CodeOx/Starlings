@@ -22,10 +22,12 @@ public:
 	Boid(Vector location,Vector velocity);
 	//! This function applies the force on boid
 	void applyForce(Vector force);
-	//! function to update direction
-	void updateDirection();
+	//! function to update velocity
+	void updateVelocity(float time);
 	//! function to update location
-	void updateLocation();
+	void updateLocation(float time);
+	//! function to update the boid after elapsed time
+	void update(float time);
 	//! function to get location
 	Vector getLocation();
 

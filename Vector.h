@@ -18,6 +18,12 @@ public:
 	Vector();
 	//!Custom constructor for this class
 	Vector(float e1,float e2,float e3);
+	//! Function to set the first component
+	void setFirst(float e);
+	//! Function to set the second component
+	void setSecond(float e);
+	//! Function to set the third component
+	void setThird(float e);
 	//! Accessor function to get the first component
 	float getFirst();
 	//! Accessor function to get the second component

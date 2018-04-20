@@ -52,7 +52,6 @@ private:
     int zRot;
 
     int elapsed;
-    int numBoids;
 
     float posX;
     float posY;
