@@ -136,28 +136,9 @@ void GLWidget::draw()
         glPushMatrix();
         glColor3f(1.0, 0.0, 0.0);
 
-        //std::cout<<i;
-
-        //float newPosX = 15.0 * qCos(elapsed*6.28319/4000);
-        //float newPosY = 10.0 * qSin(elapsed*6.28319/4000);
-        //float newPosZ = 15.0 * qSin(elapsed*6.28319/4000);
-
-        //float deltaX = newPosX - posX;
-        //float deltaY = newPosY - posY;
-        //float deltaZ = newPosZ - posZ;
-
-        //float normalize = qSqrt((deltaX*deltaX) + (deltaY*deltaY) + (deltaZ*deltaZ));
-
-        glScalef(0.08, 0.08, 0.08);
-
-        //glRotatef(57.29 * qAcos(deltaX/normalize), 1.0, qAcos(deltaY/normalize), qAcos(deltaZ/normalize));
-        //glRotatef(57.29 * (deltaX/normalize), 1.0, 0.0, 0.0);
+        glScalef(0.06, 0.06, 0.06);
 
         glTranslatef(b_location.getFirst(), b_location.getSecond(), b_location.getThird());
-
-        //posX = newPosX;
-        //posY = newPosY;
-        //posZ = newPosZ;
 
 
         glBegin(GL_QUADS);

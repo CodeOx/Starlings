@@ -20,6 +20,8 @@ public:
 	Vector forceAlignment(Boid b);
 	//! This function gives the force vector that boid experiences due to centeringrule
 	Vector forceCenter(Boid b);
+    //! This function gives the force vector that boid experiences due to drag
+    Vector forceDrag(Boid b);
 	//! This function is used to update the swarm after elapsed time
 	void update(float time);
 	//! This function gives the centre of mass of the swarm	

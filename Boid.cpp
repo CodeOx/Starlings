@@ -1,6 +1,6 @@
 #include "Boid.h"
 
-#define LOCATION_FACTOR 5.0
+#define LOCATION_FACTOR 1.0
 #define VELOCITY_FACTOR 10.0
 #define mass 1.0
 
@@ -55,5 +55,10 @@ void Boid::update(float time){
 }
 
 Vector Boid::getLocation(){
-	return this->location;
+    return this->location;
+}
+
+Vector Boid::getVelocity()
+{
+    return this->velocity;
 }

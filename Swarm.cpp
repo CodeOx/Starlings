@@ -82,15 +82,44 @@ Vector Swarm::forceCenter(Boid b){
     return force;
 }
 
+Vector Swarm::forceDrag(Boid b){
+    Vector v = b.getVelocity();
+
+    float v_x = v.getFirst();
+    float v_y = v.getSecond();
+    float v_z = v.getThird();
+
+    float proportionalityConstant = 0.02;
+    float exponent = 2.0;
+
+    float force_x = proportionalityConstant*(std::pow((v_x),exponent));
+    float force_y = proportionalityConstant*(std::pow((v_y),exponent));
+    float force_z = proportionalityConstant*(std::pow((v_z),exponent));
+
+    if (v_x > 0){
+        force_x = -1 * force_x;
+    }
+    if (v_y > 0){
+        force_y = -1 * force_y;
+    }
+    if (v_z > 0){
+        force_z = -1 * force_z;
+    }
+    Vector force(force_x, force_y, force_z);
+
+    return force;
+}
+
 void Swarm::update(float time){
 	for (int i = 0; i < swarm.size(); i++){
 		swarm[i].update(time);
         Vector force1 = forceCohesion(swarm[i]);
         Vector force2 = forceCenter(swarm[i]);
+        Vector force3 = forceDrag(swarm[i]);
         Vector force;
-        force.setFirst(force1.getFirst() + force2.getFirst());
-        force.setSecond(force1.getSecond() + force2.getSecond());
-        force.setThird(force1.getThird() + force2.getThird());
+        force.setFirst(force1.getFirst() + force2.getFirst() + force3.getFirst());
+        force.setSecond(force1.getSecond() + force2.getSecond() + force3.getSecond());
+        force.setThird(force1.getThird() + force2.getThird() + force3.getThird());
         swarm[i].applyForce(force);
 	}
 }

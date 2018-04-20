@@ -30,6 +30,8 @@ public:
 	void update(float time);
 	//! function to get location
 	Vector getLocation();
+    //! function to get velocity
+    Vector getVelocity();
 
 };
 
