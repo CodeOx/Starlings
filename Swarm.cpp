@@ -53,11 +53,63 @@ Vector Swarm::forceCohesion(Boid b){
 }
 
 Vector Swarm::forceSeparation(Boid b){
+    int N = this->swarm.size();
+    float x = 0.0;
+    float y = 0.0;
+    float z = 0.0;
+    Vector totalForce(0.0,0.0,0.0);
+    Vector location_b = b.getLocation();
+
+    float proportionalityConstant = 1.0;
+    float exponent = 1.0;
+    float constant = 0.0;
+
+    for(int i = 0; i < N; i++){
+        Vector location_ib = swarm[i].getLocation();
+        float delta_x = location_ib.getFirst() - location_b.getFirst();
+        float delta_y = location_ib.getSecond() - location_b.getSecond();
+        float delta_z = location_ib.getThird() - location_b.getThird();
+
+        float force_x = constant + proportionalityConstant*(std::pow(delta_x,exponent));
+        float force_y = constant + proportionalityConstant*(std::pow(delta_y,exponent));
+        float force_z = constant + proportionalityConstant*(std::pow(delta_z,exponent));
+
+        totalForce.setFirst(totalForce.getFirst() + force_x);
+        totalForce.setFirst(totalForce.getSecond() + force_y);
+        totalForce.setFirst(totalForce.getThird() + force_z);
+    }
+
+    return totalForce;
 
 }
 
 Vector Swarm::forceAlignment(Boid b){
+    Vector average_velocity = this->getAverageVelocity();
+    float x = 0.0;
+    float y = 0.0;
+    float z = 0.0;
 
+    Vector velocity_b = b.getVelocity();
+
+    x = ((average_velocity.getFirst() * swarm.size()) - velocity_b.getFirst())/(swarm.size() - 1);
+    y = ((average_velocity.getSecond() * swarm.size()) - velocity_b.getSecond())/(swarm.size() - 1);
+    z = ((average_velocity.getThird() * swarm.size()) - velocity_b.getThird())/(swarm.size() - 1);
+
+    float delta_x = x - velocity_b.getFirst();
+    float delta_y = y - velocity_b.getSecond();
+    float delta_z = z - velocity_b.getThird();
+
+    float proportionalityConstant = 1.0;
+    float exponent = 1.0;
+    float constant = 0.0;
+
+    float force_x = constant + proportionalityConstant*(std::pow(delta_x,exponent));
+    float force_y = constant + proportionalityConstant*(std::pow(delta_y,exponent));
+    float force_z = constant + proportionalityConstant*(std::pow(delta_z,exponent));
+
+    Vector force(force_x, force_y, force_z);
+
+    return force; 
 }
 
 Vector Swarm::forceCenter(Boid b){
@@ -145,4 +197,27 @@ Vector Swarm::getCOM(){
 	Vector v(x,y,z);
 
 	return v;
+}
+
+Vector Swarm::getAverageVelocity(){
+    float x = 0.0;
+    float y = 0.0;
+    float z = 0.0;
+
+    int N = swarm.size();
+
+    for(int i = 0; i < N; i++){
+        Vector velocity_i = swarm[i].getVelocity();
+        x = x + velocity_i.getFirst();
+        y = y + velocity_i.getSecond();
+        z = z + velocity_i.getThird();
+    }
+
+    x = x/N;
+    y = y/N;
+    z = z/N;
+
+    Vector v(x,y,z);
+
+    return v;
 }

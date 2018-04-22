@@ -26,6 +26,8 @@ public:
 	void update(float time);
 	//! This function gives the centre of mass of the swarm	
 	Vector getCOM();
+	//! This function gives the average velocity of the swarm	
+	Vector getAverageVelocity();
 
 	Boid getBoid(int i);
 	void addBoid(Boid b);
