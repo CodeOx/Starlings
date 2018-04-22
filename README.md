@@ -1,2 +1,2 @@
 # Starlings
-Simulation of a flock of starlings
+Simulation of a Flock of Starlings 
