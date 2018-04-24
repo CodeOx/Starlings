@@ -168,10 +168,12 @@ void Swarm::update(float time){
         Vector force1 = forceCohesion(swarm[i]);
         Vector force2 = forceCenter(swarm[i]);
         Vector force3 = forceDrag(swarm[i]);
+        Vector force4 = forceSeparation(swarm[i]);
+        Vector force5 = forceAlignment(swarm[i]);
         Vector force;
-        force.setFirst(force1.getFirst() + force2.getFirst() + force3.getFirst());
-        force.setSecond(force1.getSecond() + force2.getSecond() + force3.getSecond());
-        force.setThird(force1.getThird() + force2.getThird() + force3.getThird());
+        force.setFirst(force1.getFirst() + force2.getFirst() + force3.getFirst() + force4.getFirst() + force5.getFirst());
+        force.setSecond(force1.getSecond() + force2.getSecond() + force3.getSecond() + force4.getSecond() + force5.getSecond());
+        force.setThird(force1.getThird() + force2.getThird() + force3.getThird() + force4.getThird() + force5.getThird());
         swarm[i].applyForce(force);
 	}
 }

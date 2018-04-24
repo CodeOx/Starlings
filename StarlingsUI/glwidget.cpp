@@ -1,9 +1,44 @@
 #include "glwidget.h"
 #include <QtOpenGL>
 #include <qmath.h>
+#include <QVector3D>
 #include <iostream>
 
 #define timePerFrame 0.05
+#define radianToDegree 57.296
+
+float magnitude(Vector v){
+    float x = v.getFirst();
+    float y = v.getSecond();
+    float z = v.getThird();
+
+    float mag = qPow((x*x)+(y*y)+(z*z),0.5);
+
+    return mag;
+}
+
+float dotProduct(Vector v1, Vector v2){
+    return (v1.getFirst() * v2.getFirst()) + (v1.getSecond() * v2.getSecond()) + (v1.getThird() * v2.getThird());
+}
+
+float getRotationAngle(Vector v1, Vector v2){
+    if (magnitude(v1) != 0 && magnitude(v2)!= 0){
+        return qAbs((dotProduct(v1,v2))/((magnitude(v1)*magnitude(v2))));
+    }
+    return 0.0;
+}
+
+Vector getRotationAxis(Vector v1, Vector v2){
+    QVector3D qV1(v1.getFirst(),v1.getSecond(),v1.getThird());
+    QVector3D qV2(v2.getFirst(),v2.getSecond(),v2.getThird());
+    QVector3D qV = QVector3D::crossProduct(qV1,qV2);
+    Vector v(qV.x(),qV.y(),qV.z());
+    float v_mag = magnitude(v);
+    if (v_mag != 0){
+        return Vector(v.getFirst()/v_mag,v.getSecond()/v_mag,v.getThird()/v_mag);
+    }
+    return Vector(0.0,0.0,0.0);
+}
 
 static void qNormalizeAngle(int &angle)
 {
@@ -132,6 +167,7 @@ void GLWidget::draw()
 
         Boid b = s.getBoid(i);
         Vector b_location = b.getLocation();
+        Vector b_velocity = b.getVelocity();
 
         glPushMatrix();
         glColor3f(1.0, 0.0, 0.0);
@@ -140,6 +176,11 @@ void GLWidget::draw()
 
         glTranslatef(b_location.getFirst(), b_location.getSecond(), b_location.getThird());
 
+        //boid originially points towards z -axis
+        Vector z_axis(0.0,0.0,1.0);
+        float rotationAngle = getRotationAngle(z_axis, b_velocity);
+        Vector rotationAxis = getRotationAxis(z_axis, b_velocity);
+        glRotatef(radianToDegree * rotationAngle,rotationAxis.getFirst(),rotationAxis.getSecond(),rotationAxis.getThird());
 
         glBegin(GL_QUADS);
             glColor3f(1.0, 1.0, 1.0);
