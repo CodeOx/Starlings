@@ -60,7 +60,7 @@ Vector Swarm::forceSeparation(Boid b){
     float proportionalityConstant = -1.0;
     float exponent = -1.0;
     float constant = 0.0;
-    float minDistance = 20.0;
+    float minDistance = 100.0;
     float maxForce = 50.0;
     float force = 0.0;
 
@@ -70,15 +70,16 @@ Vector Swarm::forceSeparation(Boid b){
         float delta_y = (location_ib.getSecond() - location_b.getSecond())/100.0;
         float delta_z = (location_ib.getThird() - location_b.getThird())/100.0;
         float dist = sqrt((delta_x*delta_x) + (delta_y*delta_y) + (delta_z*delta_z));
+        force = 0.0;
+        if (dist > 0){
+            if (dist < minDistance){
+                force = constant + proportionalityConstant*(std::pow(dist,exponent));
+            }
 
-        if (dist < minDistance){
-            force = constant + proportionalityConstant*(std::pow(dist,exponent));
+            totalForce.setFirst(totalForce.getFirst() + force*delta_x/dist);
+            totalForce.setSecond(totalForce.getSecond() + force*delta_y/dist);
+            totalForce.setThird(totalForce.getThird() + force*delta_z/dist);
         }
-
-        totalForce.setFirst(totalForce.getFirst() - force*delta_x/dist);
-        totalForce.setSecond(totalForce.getSecond() - force*delta_y/dist);
-        totalForce.setThird(totalForce.getThird() - force*delta_z/dist);
-
         //std::cout<<"foorces       : "<<i<<" "<<totalForce.getSecond()<<" "<<totalForce.getThird()<<std::endl;
     }
     return totalForce;
@@ -170,9 +171,9 @@ void Swarm::update(float time){
         Vector force1 = forceCohesion(swarm[i]);
         Vector force2 = forceCenter(swarm[i]);
         Vector force3 = forceDrag(swarm[i]);
-        //Vector force4 = forceSeparation(swarm[i]);
+        Vector force4 = forceSeparation(swarm[i]);
         Vector force5 = forceAlignment(swarm[i]);
-        Vector force4(0.0,0.0,0.0);
+        //Vector force4(0.0,0.0,0.0);
         Vector force;
         force.setFirst(force1.getFirst() + force2.getFirst() + force3.getFirst() + force4.getFirst() + force5.getFirst());
         force.setSecond(force1.getSecond() + force2.getSecond() + force3.getSecond() + force4.getSecond() + force5.getSecond());
