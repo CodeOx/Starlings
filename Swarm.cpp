@@ -54,31 +54,33 @@ Vector Swarm::forceCohesion(Boid b){
 
 Vector Swarm::forceSeparation(Boid b){
     int N = this->swarm.size();
-    float x = 0.0;
-    float y = 0.0;
-    float z = 0.0;
     Vector totalForce(0.0,0.0,0.0);
     Vector location_b = b.getLocation();
 
-    float proportionalityConstant = 1.0;
-    float exponent = 1.0;
+    float proportionalityConstant = -1.0;
+    float exponent = -1.0;
     float constant = 0.0;
+    float minDistance = 20.0;
+    float maxForce = 50.0;
+    float force = 0.0;
 
     for(int i = 0; i < N; i++){
         Vector location_ib = swarm[i].getLocation();
-        float delta_x = location_ib.getFirst() - location_b.getFirst();
-        float delta_y = location_ib.getSecond() - location_b.getSecond();
-        float delta_z = location_ib.getThird() - location_b.getThird();
+        float delta_x = (location_ib.getFirst() - location_b.getFirst())/100.0;
+        float delta_y = (location_ib.getSecond() - location_b.getSecond())/100.0;
+        float delta_z = (location_ib.getThird() - location_b.getThird())/100.0;
+        float dist = sqrt((delta_x*delta_x) + (delta_y*delta_y) + (delta_z*delta_z));
 
-        float force_x = constant + proportionalityConstant*(std::pow(delta_x,exponent));
-        float force_y = constant + proportionalityConstant*(std::pow(delta_y,exponent));
-        float force_z = constant + proportionalityConstant*(std::pow(delta_z,exponent));
+        if (dist < minDistance){
+            force = constant + proportionalityConstant*(std::pow(dist,exponent));
+        }
 
-        totalForce.setFirst(totalForce.getFirst() + force_x);
-        totalForce.setFirst(totalForce.getSecond() + force_y);
-        totalForce.setFirst(totalForce.getThird() + force_z);
+        totalForce.setFirst(totalForce.getFirst() - force*delta_x/dist);
+        totalForce.setSecond(totalForce.getSecond() - force*delta_y/dist);
+        totalForce.setThird(totalForce.getThird() - force*delta_z/dist);
+
+        //std::cout<<"foorces       : "<<i<<" "<<totalForce.getSecond()<<" "<<totalForce.getThird()<<std::endl;
     }
-
     return totalForce;
 
 }
@@ -168,13 +170,22 @@ void Swarm::update(float time){
         Vector force1 = forceCohesion(swarm[i]);
         Vector force2 = forceCenter(swarm[i]);
         Vector force3 = forceDrag(swarm[i]);
-        Vector force4 = forceSeparation(swarm[i]);
+        //Vector force4 = forceSeparation(swarm[i]);
         Vector force5 = forceAlignment(swarm[i]);
+        Vector force4(0.0,0.0,0.0);
         Vector force;
         force.setFirst(force1.getFirst() + force2.getFirst() + force3.getFirst() + force4.getFirst() + force5.getFirst());
         force.setSecond(force1.getSecond() + force2.getSecond() + force3.getSecond() + force4.getSecond() + force5.getSecond());
         force.setThird(force1.getThird() + force2.getThird() + force3.getThird() + force4.getThird() + force5.getThird());
         swarm[i].applyForce(force);
+        if(i == 1){
+            std::cout<< "cohesion   "<<force1.getFirst()<<" "<<force1.getSecond()<<" "<<force1.getThird()<<std::endl;
+            std::cout<< "center   "<<force2.getFirst()<<" "<<force2.getSecond()<<" "<<force2.getThird()<<std::endl;
+            std::cout<< "drag   "<<force3.getFirst()<<" "<<force3.getSecond()<<" "<<force3.getThird()<<std::endl;
+            std::cout<< "seperation   "<<force4.getFirst()<<" "<<force4.getSecond()<<" "<<force4.getThird()<<std::endl;
+            std::cout<< "align   "<<force5.getFirst()<<" "<<force5.getSecond()<<" "<<force5.getThird()<<std::endl;
+        }
+        //swarm[i].update
 	}
 }
 
