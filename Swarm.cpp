@@ -239,31 +239,58 @@ Vector Swarm::forceCenter(Boid b){
     return force;
 }
 
-void Swarm::update(float time){
-	for (int i = 0; i < swarm.size(); i++){
-		swarm[i].update(time);
-        Vector force1 = forceCohesion(swarm[i]);
-        Vector force2 = forceCenter(swarm[i]);
-        Vector force3 = forceDrag(swarm[i]);
-        Vector force4 = forceSeparation(swarm[i]);
-        Vector force5 = forceAlignment(swarm[i]);
-        //Vector force2(0.0,0.0,0.0);
-        //Vector force3(0.0,0.0,0.0);
-        Vector force;
-        force.setFirst(force1.getFirst() + force2.getFirst() + force3.getFirst() + force4.getFirst() + force5.getFirst());
-        force.setSecond(force1.getSecond() + force2.getSecond() + force3.getSecond() + force4.getSecond() + force5.getSecond());
-        force.setThird(force1.getThird() + force2.getThird() + force3.getThird() + force4.getThird() + force5.getThird());
-        applyForceCenter(swarm[i]);
-        swarm[i].applyForce(force);
-        if(i == 1){
-            std::cout<< "cohesion   "<<force1.getFirst()<<" "<<force1.getSecond()<<" "<<force1.getThird()<<std::endl;
-            std::cout<< "center   "<<force2.getFirst()<<" "<<force2.getSecond()<<" "<<force2.getThird()<<std::endl;
-            std::cout<< "drag   "<<force3.getFirst()<<" "<<force3.getSecond()<<" "<<force3.getThird()<<std::endl;
-            std::cout<< "seperation   "<<force4.getFirst()<<" "<<force4.getSecond()<<" "<<force4.getThird()<<std::endl;
-            std::cout<< "align   "<<force5.getFirst()<<" "<<force5.getSecond()<<" "<<force5.getThird()<<std::endl;
+void* updateBoid(void* threadarg){
+    struct thread_data *my_data;
+    my_data = (struct thread_data *) threadarg;
+    float time;
+    Boid b;
+    Swarm s;
+    time = my_data->time;
+    b = my_data->b;
+    s = my_data->s;
+    b.update(time);
+    Vector force1 = s.forceCohesion(b);
+    Vector force2 = s.forceCenter(b);
+    Vector force3 = s.forceDrag(b);
+    Vector force4 = s.forceSeparation(b);
+    Vector force5 = s.forceAlignment(b);
+    Vector force;
+    force.setFirst(force1.getFirst() + force2.getFirst() + force3.getFirst() + force4.getFirst() + force5.getFirst());
+    force.setSecond(force1.getSecond() + force2.getSecond() + force3.getSecond() + force4.getSecond() + force5.getSecond());
+    force.setThird(force1.getThird() + force2.getThird() + force3.getThird() + force4.getThird() + force5.getThird());
+    applyForceCenter(b);
+    b.applyForce(force);
+
+    std::cout<< "cohesion   "<<force1.getFirst()<<" "<<force1.getSecond()<<" "<<force1.getThird()<<std::endl;
+    std::cout<< "center   "<<force2.getFirst()<<" "<<force2.getSecond()<<" "<<force2.getThird()<<std::endl;
+    std::cout<< "drag   "<<force3.getFirst()<<" "<<force3.getSecond()<<" "<<force3.getThird()<<std::endl;
+    std::cout<< "seperation   "<<force4.getFirst()<<" "<<force4.getSecond()<<" "<<force4.getThird()<<std::endl;
+    std::cout<< "align   "<<force5.getFirst()<<" "<<force5.getSecond()<<" "<<force5.getThird()<<std::endl;
+
+}
+
+void Swarm::update(float t){
+    int NUM_THREADS = swarm.size();
+
+    pthread_t threads[NUM_THREADS];
+    struct thread_data td[NUM_THREADS];
+    int rc;
+    Swarm sw;
+    
+	for (int i = 0; i < NUM_THREADS; i++){
+        td[i].time = t;
+        td[i].b = swarm[i];
+        td[i].s = sw;
+        rc = pthread_create(&threads[i], NULL, updateBoid, (void *)&td[i]);
+        if (rc) {
+          std::cout << "Error:unable to create thread," << rc << std::endl;
+          exit(-1);
         }
-        //swarm[i].update
 	}
+    //Wait for all threads to finish
+    for (int i = 0; i < NUM_THREADS; i++){
+        pthread_join(threads[i], NULL);
+    }
 }
 
 Vector Swarm::getCOM(){
