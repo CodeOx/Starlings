@@ -37,6 +37,21 @@ void Boid::applyForce(Vector force){
 	acceleration.setThird(force.getThird()/mass);
 }
 
+void Boid::applyRotation(float angle, QVector3D v){
+    QMatrix4x4 m1;
+    if(!(v.x() == 0 && v.y() == 0 && v.z() == 0))
+    {
+        m1.rotate(angle, v);
+        QVector3D vel(velocity.getFirst(),velocity.getSecond(),velocity.getThird());
+        vel = vel * m1;
+        velocity.setFirst(vel.x());
+        velocity.setSecond(vel.y());
+        velocity.setThird(vel.z());
+    }
+    std::cout<<"vel_x   :    "<<velocity.getFirst()<<std::endl;
+
+}
+
 void Boid::updateLocation(float time){
 	location.setFirst(location.getFirst() + (velocity.getFirst() * time));
     location.setSecond(location.getSecond() + (velocity.getSecond() * time));
@@ -61,4 +76,9 @@ Vector Boid::getLocation(){
 Vector Boid::getVelocity()
 {
     return this->velocity;
+}
+
+void Boid::setVelocity(Vector v)
+{
+    this->velocity = v;
 }

@@ -23,7 +23,7 @@ float dotProduct(Vector v1, Vector v2){
 
 float getRotationAngle(Vector v1, Vector v2){
     if (magnitude(v1) != 0 && magnitude(v2)!= 0){
-        return qAbs((dotProduct(v1,v2))/((magnitude(v1)*magnitude(v2))));
+        return qAcos(qAbs((dotProduct(v1,v2))/((magnitude(v1)*magnitude(v2)))));
     }
     return 0.0;
 }

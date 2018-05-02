@@ -19,7 +19,7 @@ public:
 	//! This function gives the force vector that boid experiences due to alignment rule
 	Vector forceAlignment(Boid b);
 	//! This function gives the force vector that boid experiences due to centeringrule
-	Vector forceCenter(Boid b);
+    void applyForceCenter(Boid &b);
     //! This function gives the force vector that boid experiences due to drag
     Vector forceDrag(Boid b);
 	//! This function is used to update the swarm after elapsed time
@@ -33,6 +33,7 @@ public:
 	void addBoid(Boid b);
 	int getSwarmSize();
 
+    Vector forceCenter(Boid b);
 };
 
 

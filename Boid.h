@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <QVector3D>
+#include <QMatrix4x4>
 #include <cstdlib>
 #include "Vector.h"
 
@@ -22,7 +24,8 @@ public:
 	Boid(Vector location,Vector velocity);
 	//! This function applies the force on boid
 	void applyForce(Vector force);
-	//! function to update velocity
+    void applyRotation(float angle, QVector3D v);
+    //! function to update velocity
 	void updateVelocity(float time);
 	//! function to update location
 	void updateLocation(float time);
@@ -32,6 +35,8 @@ public:
 	Vector getLocation();
     //! function to get velocity
     Vector getVelocity();
+    //! function to set velocity
+    void setVelocity(Vector v);
 
 };
 
