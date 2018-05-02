@@ -172,7 +172,7 @@ void GLWidget::draw()
         glPushMatrix();
         glColor3f(1.0, 0.0, 0.0);
 
-        glScalef(0.06, 0.06, 0.06);
+        glScalef(0.03, 0.03, 0.03);
 
         glTranslatef(b_location.getFirst(), b_location.getSecond(), b_location.getThird());
 

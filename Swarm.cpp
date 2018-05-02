@@ -1,10 +1,21 @@
 #include <iostream>
+#include <thread>
 #include <cmath>
 #include <QVector3D>
 #include <QMatrix4x4>
 #include "Swarm.h"
 
-#define INITIAL_SIZE 4
+#define INITIAL_SIZE 100
+#define NEIGHBOURHOOD 50.0
+#define DRAGTHRESHHOLD 100.0
+#define CENTERTHRESHOLD 100.0
+
+struct thread_data
+{
+    float time;
+    Boid b;
+    Swarm s;
+};
 
 float magnitude1(Vector v){
     float x = v.getFirst();
@@ -46,11 +57,19 @@ void Swarm::addBoid(Boid b){
 }
 
 int Swarm::getSwarmSize(){
-	return this->swarm.size(); 
+    return this->swarm.size();
+}
+
+float Swarm::getDistance(Vector v1, Vector v2)
+{
+    float delta_x = v1.getFirst() - v2.getFirst();
+    float delta_y = v1.getSecond() - v2.getSecond();
+    float delta_z = v1.getThird() - v2.getThird();
+    return std::sqrt((delta_x*delta_x) + (delta_y*delta_y) + (delta_z*delta_z) );
 }
 
 Vector Swarm::forceCohesion(Boid b){
-	Vector centre_of_mass = this->getCOM();
+    Vector centre_of_mass = this->getCOM(b);
 	float x = 0.0;
 	float y = 0.0;
 	float z = 0.0;
@@ -101,10 +120,11 @@ Vector Swarm::forceSeparation(Boid b){
             if (dist < minDistance){
                 force = constant + proportionalityConstant*(std::pow(dist,exponent));
             }
-
+            if(getDistance(location_ib,location_b) < NEIGHBOURHOOD){
             totalForce.setFirst(totalForce.getFirst() + force*delta_x/dist);
             totalForce.setSecond(totalForce.getSecond() + force*delta_y/dist);
             totalForce.setThird(totalForce.getThird() + force*delta_z/dist);
+            }
         }
         //std::cout<<"foorces       : "<<i<<" "<<totalForce.getSecond()<<" "<<totalForce.getThird()<<std::endl;
     }
@@ -113,7 +133,7 @@ Vector Swarm::forceSeparation(Boid b){
 }
 
 Vector Swarm::forceAlignment(Boid b){
-    Vector average_velocity = this->getAverageVelocity();
+    Vector average_velocity = this->getAverageVelocity(b);
     float x = 0.0;
     float y = 0.0;
     float z = 0.0;
@@ -205,9 +225,17 @@ Vector Swarm::forceDrag(Boid b){
     if (v_z > 0){
         force_z = -1 * force_z;
     }
-    Vector force(force_x, force_y, force_z);
 
-    return force;
+    std::cout<<magnitude1(v) << "******************"<<std::endl;
+
+    if(magnitude1(v) > DRAGTHRESHHOLD){
+        Vector force1(force_x, force_y, force_z);
+        return force1;
+    }
+    else{
+        Vector force2(0.0,0.0,0.0);
+        return force2;
+    }
 }
 
 Vector Swarm::forceCenter(Boid b){
@@ -239,9 +267,36 @@ Vector Swarm::forceCenter(Boid b){
     return force;
 }
 
-void Swarm::update(float time){
-	for (int i = 0; i < swarm.size(); i++){
-		swarm[i].update(time);
+Vector Swarm::forceCenter1(Boid b){
+    float x = 0.0;
+    float y = 0.0;
+    float z = 0.0;
+
+    Vector location_b = b.getLocation();
+    x = location_b.getFirst();
+    y = location_b.getSecond();
+    z = location_b.getThird();
+
+    float proportionalityConstant = 1.0;
+    float exponent = 1.0;
+
+    float force_x = proportionalityConstant*(std::pow((-1*x),exponent));
+    float force_y = proportionalityConstant*(std::pow((-1*y),exponent));
+    float force_z = proportionalityConstant*(std::pow((-1*z),exponent));
+
+    if(magnitude1(location_b) > CENTERTHRESHOLD){
+        Vector force1(force_x, force_y, force_z);
+        return force1;
+    }
+    else{
+        Vector force2(0.0,0.0,0.0);
+        return force2;
+    }
+}
+
+/*void Swarm::update(float time){
+    for (int i = 0; i < swarm.size(); i++){
+        swarm[i].update(time);
         Vector force1 = forceCohesion(swarm[i]);
         Vector force2 = forceCenter(swarm[i]);
         Vector force3 = forceDrag(swarm[i]);
@@ -253,7 +308,7 @@ void Swarm::update(float time){
         force.setFirst(force1.getFirst() + force2.getFirst() + force3.getFirst() + force4.getFirst() + force5.getFirst());
         force.setSecond(force1.getSecond() + force2.getSecond() + force3.getSecond() + force4.getSecond() + force5.getSecond());
         force.setThird(force1.getThird() + force2.getThird() + force3.getThird() + force4.getThird() + force5.getThird());
-        applyForceCenter(swarm[i]);
+        //applyForceCenter(swarm[i]);
         swarm[i].applyForce(force);
         if(i == 1){
             std::cout<< "cohesion   "<<force1.getFirst()<<" "<<force1.getSecond()<<" "<<force1.getThird()<<std::endl;
@@ -263,49 +318,114 @@ void Swarm::update(float time){
             std::cout<< "align   "<<force5.getFirst()<<" "<<force5.getSecond()<<" "<<force5.getThird()<<std::endl;
         }
         //swarm[i].update
-	}
+    }
+}*/
+
+void* updateBoid(void* threadarg){
+    struct thread_data *my_data;
+    my_data = (struct thread_data *) threadarg;
+    float time;
+    Boid b;
+    Swarm s;
+    time = my_data->time;
+    b = my_data->b;
+    s = my_data->s;
+    b.update(time);
+    Vector force1 = s.forceCohesion(b);
+    Vector force2 = s.forceCenter(b);
+    Vector force3 = s.forceDrag(b);
+    Vector force4 = s.forceSeparation(b);
+    Vector force5 = s.forceAlignment(b);
+    Vector force;
+    force.setFirst(force1.getFirst() + force2.getFirst() + force3.getFirst() + force4.getFirst() + force5.getFirst());
+    force.setSecond(force1.getSecond() + force2.getSecond() + force3.getSecond() + force4.getSecond() + force5.getSecond());
+    force.setThird(force1.getThird() + force2.getThird() + force3.getThird() + force4.getThird() + force5.getThird());
+    //applyForceCenter(b);
+    b.applyForce(force);
+
+    std::cout<< "cohesion   "<<force1.getFirst()<<" "<<force1.getSecond()<<" "<<force1.getThird()<<std::endl;
+    std::cout<< "center   "<<force2.getFirst()<<" "<<force2.getSecond()<<" "<<force2.getThird()<<std::endl;
+    std::cout<< "drag   "<<force3.getFirst()<<" "<<force3.getSecond()<<" "<<force3.getThird()<<std::endl;
+    std::cout<< "seperation   "<<force4.getFirst()<<" "<<force4.getSecond()<<" "<<force4.getThird()<<std::endl;
+    std::cout<< "align   "<<force5.getFirst()<<" "<<force5.getSecond()<<" "<<force5.getThird()<<std::endl;
+
 }
 
-Vector Swarm::getCOM(){
-	float x = 0.0;
-	float y = 0.0;
+void Swarm::update(float t){
+    int NUM_THREADS = swarm.size();
+
+    pthread_t threads[NUM_THREADS];
+    struct thread_data td[NUM_THREADS];
+    int rc;
+    Swarm sw;
+
+    for (int i = 0; i < NUM_THREADS; i++){
+        td[i].time = t;
+        td[i].b = swarm[i];
+        td[i].s = sw;
+        rc = pthread_create(&threads[i], NULL, updateBoid, (void *)&td[i]);
+        if (rc) {
+          std::cout << "Error:unable to create thread," << rc << std::endl;
+          exit(-1);
+        }
+    }
+    //Wait for all threads to finish
+    for (int i = 0; i < NUM_THREADS; i++){
+        pthread_join(threads[i], NULL);
+    }
+}
+
+
+Vector Swarm::getCOM(Boid b){
+    float x = 0.0;
+    float y = 0.0;
 	float z = 0.0;
 
-	int N = swarm.size();
+    int N = 0;
 
-	for(int i = 0; i < N; i++){
-		Vector location_i = swarm[i].getLocation();
-		x = x + location_i.getFirst();
-		y = y + location_i.getSecond();
-		z = z + location_i.getThird();
+
+    for(int i = 0; i < swarm.size(); i++){
+        Vector location_i = swarm[i].getLocation();
+        if(getDistance(location_i,b.getLocation())< NEIGHBOURHOOD){
+            x = x + location_i.getFirst();
+            y = y + location_i.getSecond();
+            z = z + location_i.getThird();
+            N += 1;
+        }
 	}
-
-	x = x/N;
-	y = y/N;
-	z = z/N;
+    if( N > 0){
+        x = x/N;
+        y = y/N;
+        z = z/N;
+    }
 
 	Vector v(x,y,z);
 
 	return v;
 }
 
-Vector Swarm::getAverageVelocity(){
+Vector Swarm::getAverageVelocity(Boid b){
     float x = 0.0;
     float y = 0.0;
     float z = 0.0;
 
-    int N = swarm.size();
+    int N = 0;
 
-    for(int i = 0; i < N; i++){
+    for(int i = 0; i < swarm.size(); i++){
         Vector velocity_i = swarm[i].getVelocity();
-        x = x + velocity_i.getFirst();
-        y = y + velocity_i.getSecond();
-        z = z + velocity_i.getThird();
+        if(getDistance(swarm[i].getLocation(),b.getLocation())<NEIGHBOURHOOD){
+            x = x + velocity_i.getFirst();
+            y = y + velocity_i.getSecond();
+            z = z + velocity_i.getThird();
+            N += 1;
+        }
     }
 
-    x = x/N;
-    y = y/N;
-    z = z/N;
+    if( N > 0){
+        x = x/N;
+        y = y/N;
+        z = z/N;
+    }
 
     Vector v(x,y,z);
 

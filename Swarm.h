@@ -25,15 +25,16 @@ public:
 	//! This function is used to update the swarm after elapsed time
 	void update(float time);
 	//! This function gives the centre of mass of the swarm	
-	Vector getCOM();
+    Vector getCOM(Boid b);
 	//! This function gives the average velocity of the swarm	
-	Vector getAverageVelocity();
+    Vector getAverageVelocity(Boid b);
 
 	Boid getBoid(int i);
 	void addBoid(Boid b);
 	int getSwarmSize();
-
+    float getDistance(Vector v1, Vector v2);
     Vector forceCenter(Boid b);
+    Vector forceCenter1(Boid b);
 };
 
 
