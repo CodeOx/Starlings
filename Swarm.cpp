@@ -321,15 +321,15 @@ Vector Swarm::forceCenter1(Boid b){
     }
 }*/
 
-void* updateBoid(void* threadarg){
-    struct thread_data *my_data;
-    my_data = (struct thread_data *) threadarg;
-    float time;
-    Boid b;
-    Swarm s;
-    time = my_data->time;
-    b = my_data->b;
-    s = my_data->s;
+void updateBoid(Boid b,float time,Swarm s){
+    //struct thread_data *my_data;
+    //my_data = (struct thread_data *) threadarg;
+    //float time;
+    //Boid b;
+    //Swarm s;
+    //time = my_data->time;
+    //b = my_data->b;
+    //s = my_data->s;
     b.update(time);
     Vector force1 = s.forceCohesion(b);
     Vector force2 = s.forceCenter(b);
@@ -354,24 +354,17 @@ void* updateBoid(void* threadarg){
 void Swarm::update(float t){
     int NUM_THREADS = swarm.size();
 
-    pthread_t threads[NUM_THREADS];
-    struct thread_data td[NUM_THREADS];
-    int rc;
+    std::thread threads[NUM_THREADS];
+    //struct thread_data td[NUM_THREADS];
+    //int rc;
     Swarm sw;
-
-    for (int i = 0; i < NUM_THREADS; i++){
-        td[i].time = t;
-        td[i].b = swarm[i];
-        td[i].s = sw;
-        rc = pthread_create(&threads[i], NULL, updateBoid, (void *)&td[i]);
-        if (rc) {
-          std::cout << "Error:unable to create thread," << rc << std::endl;
-          exit(-1);
-        }
-    }
+    
+	for (int i = 0; i < NUM_THREADS; i++){
+        threads[i] = std::thread(updateBoid, swarm[i],t,sw);
+	}
     //Wait for all threads to finish
     for (int i = 0; i < NUM_THREADS; i++){
-        pthread_join(threads[i], NULL);
+        threads[i].join();
     }
 }
 
