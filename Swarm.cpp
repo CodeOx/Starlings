@@ -5,7 +5,7 @@
 #include <QMatrix4x4>
 #include "Swarm.h"
 
-#define INITIAL_SIZE 100
+#define INITIAL_SIZE 200
 #define NEIGHBOURHOOD 50.0
 #define DRAGTHRESHHOLD 100.0
 #define CENTERTHRESHOLD 100.0
@@ -102,10 +102,10 @@ Vector Swarm::forceSeparation(Boid b){
     Vector totalForce(0.0,0.0,0.0);
     Vector location_b = b.getLocation();
 
-    float proportionalityConstant = -1.0;
+    float proportionalityConstant = -0.1;
     float exponent = -1.0;
     float constant = 0.0;
-    float minDistance = 10.0;
+    float minDistance = 1.0;
     float maxForce = 50.0;
     float force = 0.0;
 
@@ -140,15 +140,19 @@ Vector Swarm::forceAlignment(Boid b){
 
     Vector velocity_b = b.getVelocity();
 
-    x = ((average_velocity.getFirst() * swarm.size()) - velocity_b.getFirst())/(swarm.size() - 1);
-    y = ((average_velocity.getSecond() * swarm.size()) - velocity_b.getSecond())/(swarm.size() - 1);
-    z = ((average_velocity.getThird() * swarm.size()) - velocity_b.getThird())/(swarm.size() - 1);
+    //x = ((average_velocity.getFirst() * swarm.size()) - velocity_b.getFirst())/(swarm.size() - 1);
+    //y = ((average_velocity.getSecond() * swarm.size()) - velocity_b.getSecond())/(swarm.size() - 1);
+    //z = ((average_velocity.getThird() * swarm.size()) - velocity_b.getThird())/(swarm.size() - 1);
+
+    x = average_velocity.getFirst();
+    y = average_velocity.getSecond();
+    z = average_velocity.getThird();
 
     float delta_x = x - velocity_b.getFirst();
     float delta_y = y - velocity_b.getSecond();
     float delta_z = z - velocity_b.getThird();
 
-    float proportionalityConstant = 1.0;
+    float proportionalityConstant = 0.5;
     float exponent = 1.0;
     float constant = 0.0;
 
@@ -294,7 +298,7 @@ Vector Swarm::forceCenter1(Boid b){
     }
 }
 
-/*void Swarm::update(float time){
+void Swarm::update(float time){
     for (int i = 0; i < swarm.size(); i++){
         swarm[i].update(time);
         Vector force1 = forceCohesion(swarm[i]);
@@ -319,8 +323,8 @@ Vector Swarm::forceCenter1(Boid b){
         }
         //swarm[i].update
     }
-}*/
-
+}
+/*
 void* updateBoid(void* threadarg){
     struct thread_data *my_data;
     my_data = (struct thread_data *) threadarg;
@@ -374,7 +378,7 @@ void Swarm::update(float t){
         pthread_join(threads[i], NULL);
     }
 }
-
+*/
 
 Vector Swarm::getCOM(Boid b){
     float x = 0.0;

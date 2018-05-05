@@ -181,9 +181,11 @@ void GLWidget::draw()
         float rotationAngle = getRotationAngle(z_axis, b_velocity);
         Vector rotationAxis = getRotationAxis(z_axis, b_velocity);
         glRotatef(radianToDegree * rotationAngle,rotationAxis.getFirst(),rotationAxis.getSecond(),rotationAxis.getThird());
+        glColor3f(b_location.getFirst()/100, b_location.getSecond()/100, b_location.getThird()/100);
+        //glColor3f(1.0,1.0,1.0);
 
         glBegin(GL_QUADS);
-            glColor3f(1.0, 1.0, 1.0);
+            //glColor3f(1.0, 1.0, 1.0);
             glNormal3f(0,0,-1);
             glVertex3f(-1,-1,0);
             glVertex3f(-1,1,0);
@@ -192,28 +194,28 @@ void GLWidget::draw()
 
         glEnd();
         glBegin(GL_TRIANGLES);
-            glColor3f(0.5, 0.5, 0.5);
+            //glColor3f(0.5, 0.5, 0.5);
             glNormal3f(0,-1,0.707);
             glVertex3f(-1,-1,0);
             glVertex3f(1,-1,0);
             glVertex3f(0,0,1.2);
         glEnd();
         glBegin(GL_TRIANGLES);
-            glColor3f(0.5, 0.5, 0.5);
+            //glColor3f(0.5, 0.5, 0.5);
             glNormal3f(1,0, 0.707);
             glVertex3f(1,-1,0);
             glVertex3f(1,1,0);
             glVertex3f(0,0,1.2);
         glEnd();
         glBegin(GL_TRIANGLES);
-            glColor3f(0.5, 0.5, 0.5);
+            //glColor3f(0.5, 0.5, 0.5);
             glNormal3f(0,1,0.707);
             glVertex3f(1,1,0);
             glVertex3f(-1,1,0);
             glVertex3f(0,0,1.2);
         glEnd();
         glBegin(GL_TRIANGLES);
-            glColor3f(0.5, 0.5, 0.5);
+            //glColor3f(0.5, 0.5, 0.5);
             glNormal3f(-1,0,0.707);
             glVertex3f(-1,1,0);
             glVertex3f(-1,-1,0);
