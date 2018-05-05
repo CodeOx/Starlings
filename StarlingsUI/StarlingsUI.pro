@@ -32,16 +32,16 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     glwidget.cpp \
-    ../Boid.cpp \
-    ../Swarm.cpp \
-    ../Vector.cpp
+    ../srcs/Boid.cpp \
+    ../srcs/Swarm.cpp \
+    ../srcs/Vector.cpp
 
 HEADERS += \
         mainwindow.h \
     glwidget.h \
-    ../Boid.h \
-    ../Swarm.h \
-    ../Vector.h
+    ../headers/Boid.h \
+    ../headers/Swarm.h \
+    ../headers/Vector.h
 
 FORMS += \
         mainwindow.ui
